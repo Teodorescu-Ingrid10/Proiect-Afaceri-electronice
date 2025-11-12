@@ -1,4 +1,3 @@
-
 import { axiosNoAuth } from "../axios/axiosNoAuth";
 
 export const registerUser = async (userData) => {
