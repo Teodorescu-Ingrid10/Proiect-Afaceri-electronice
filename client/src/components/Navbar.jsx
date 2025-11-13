@@ -97,6 +97,14 @@ export default function Navbar() {
                   </a>
                 </MenuItem>
                 <MenuItem>
+                  <Link
+                    to="/wishlist"
+                    className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:outline-hidden"
+                  >
+                    Wishlist
+                  </Link>
+                </MenuItem>
+                <MenuItem>
                   <button
                     onClick={handleAuthClick}
                     className="block w-full text-left px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:outline-hidden hover:bg-gray-100"

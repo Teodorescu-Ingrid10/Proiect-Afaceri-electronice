@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { createWishlistItem, fetchWishlist, deleteWishlistItem } from '../api/wish.routes';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -10,6 +11,7 @@ export default function ProductsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [deletingId, setDeletingId] = useState(null);
+  const [wishlist, setWishlist] = useState([]);
   const user = useSelector((state) => state.user.user);
   const isAdmin = user?.role === 'admin';
   const navigate = useNavigate();
@@ -31,8 +33,20 @@ export default function ProductsPage() {
         setLoading(false);
       }
     };
-
     getProducts();
+    
+    const loadWishlist = async () => {
+      try {
+        const data = await fetchWishlist();
+        if (data?.data) {
+          // Extract product IDs from wishlist items
+          setWishlist(data.data.map(item => item.productId));
+        }
+      } catch (err) {
+        console.error('Error loading wishlist:', err);
+      }
+    };
+    loadWishlist();
   }, []);
 
   const handleEditClick = (productId) => {
@@ -63,6 +77,39 @@ export default function ProductsPage() {
 
   const handleCreateClick = () => {
     navigate('/products/create');
+  };
+
+  const handleWishlistToggle = async (productId) => {
+    const isInWishlist = wishlist.includes(productId);
+    // if (isInWishlist) {
+      // Show confirmation before removing
+      // const confirmed = confirm('Are you sure you want to remove this item from your wishlist?');
+      // if (confirmed) return;
+
+    //   try {
+    //     const response = await deleteWishlistItem(productId);
+    //     if (response?.success) {
+    //       setWishlist(wishlist.filter((id) => id !== productId));
+    //       toast.success('Removed from wishlist');
+    //     } else {
+    //       toast.error(response?.message || 'Failed to remove from wishlist');
+    //     }
+    //   } catch (err) {
+    //     toast.error(err.message || 'Error removing from wishlist');
+    //   }
+    // } else {
+    try {
+      const response = await createWishlistItem(productId);
+      if (response?.success) {
+        setWishlist([...wishlist, productId]);
+        toast.success('Added to wishlist');
+      } else {
+        toast.error(response?.message || 'Failed to add to wishlist');
+      }
+    } catch (err) {
+      toast.error(err.message || 'Error adding to wishlist');
+    }
+    // }
   };
 
   if (loading) {
@@ -127,6 +174,30 @@ export default function ProductsPage() {
                   src={product.image || 'https://via.placeholder.com/300'}
                   className="aspect-square w-full rounded-md bg-gray-200 object-cover group-hover:opacity-75 lg:aspect-auto lg:h-80 pointer-events-none"
                 />
+                  <button
+                    type="button"
+                    className="absolute top-2 left-2 p-2 rounded-full shadow-lg transition-colors duration-200 z-20"
+                    onClick={() => handleWishlistToggle(product.id)}
+                    title="Wishlist"
+                    style={{ backgroundColor: wishlist.includes(product.id) ? '#dc2626' : '#f87171' }}
+                  >
+                    <svg
+                      className="w-5 h-5"
+                      fill={wishlist.includes(product.id) ? 'currentColor' : 'none'}
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5
+                          2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09
+                          C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5
+                          c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+                      />
+                    </svg>
+                  </button>
                 {isAdmin && (
                   <div className="absolute top-2 right-2 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
                     <button
