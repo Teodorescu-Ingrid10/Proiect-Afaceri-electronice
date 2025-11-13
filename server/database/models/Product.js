@@ -1,4 +1,3 @@
-// server/database/models/Product.js
 const { sequelize } = require('../server');
 const { DataTypes } = require('sequelize');
 
