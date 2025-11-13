@@ -10,7 +10,7 @@ const productRoutes = require('./routes/product.routes');
 const app = express();
 dotenv.config();
 
-const PORT = process.env.PORT || 5173;
+const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(morgan('dev'));

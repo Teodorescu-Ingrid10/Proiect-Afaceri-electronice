@@ -1,8 +1,7 @@
-const { User } = require('../database/models');
 const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { isValidToken } = require('../utils/token');
+const { User } = require('../database/models');
 
 const router = express.Router();
 
@@ -11,9 +10,9 @@ router.post('/login', async (req, res) => {
 
     const existingUser = await User.findOne({
         where: {
-            email: email,
+            email
         }
-    });
+    })
 
     if (!existingUser) {
         return res.status(400).json({success: false, message: 'User not found', data: {}});
@@ -32,11 +31,13 @@ router.post('/login', async (req, res) => {
     res.status(200).json({success: true, message: 'Valid email and password', data: token})
 })
 
+const { isValidToken } = require('../utils/token.js');
+
 router.post('/check', async (req, res) => {
     const token = req.body.token;
 
     if (!token) {
-        return res.status(400).json({success: false, message: 'Token not found', data: {}});
+        return res.status(400).json({success: false, message: 'Token not found', data: {}})
     }
 
     const validToken = isValidToken(token);
@@ -44,8 +45,6 @@ router.post('/check', async (req, res) => {
     if (!validToken) {
         return res.status(400).json({success: false, message: 'Token not valid', data: {}})
     }
-
-    res.status(200).json({success: true, message: 'Token is valid', data: {}});
-})
+    res.status(200).json({success: true, message: 'Token is valid', data:{} })});
 
 module.exports = router;
