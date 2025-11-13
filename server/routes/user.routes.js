@@ -7,13 +7,9 @@ const router = express.Router();
 
 router.post('/', async (req, res) => {
     try {
-        const existingUser = await User.findOne({
-            where: {
-                email: req.body.email
-            }
-        })
-
-        if(existingUser) {
+        const existingUser = await User.findOne({ where: { email: req.body.email } }); // am pus where
+        
+        if (existingUser) {
             return res.status(400).json({success: false, message: 'User already exists', data: {}});
         }
 
@@ -22,9 +18,9 @@ router.post('/', async (req, res) => {
 
         const user = await User.create({
             ...req.body,
-            password: hashedPassword,
+            password: hashedPassword
         })
-
+        
         delete user.dataValues.password;
 
         res.status(201).json({success: true, message: 'User created successfully', data: user});
@@ -40,22 +36,26 @@ router.put('/:id', verifyToken, async (req, res) => {
         if (isNaN(id)) {
             return res.status(400).json({success: false, message: 'User id is not valid', data: {}})
         }
-
+        
         const user = await User.findByPk(id);
 
         if (!user) {
             return res.status(404).json({success: false, message: 'User not found', data: {}})
         }
 
+        if (user.dataValues.id !== req.userId) {
+            return res.status(400).json({success: false, message: 'Not the same user', data: {}})
+        }
+
         const updatedUser = await user.update({
-            ...req.body
+            ...req.body,
         })
 
         delete updatedUser.dataValues.password;
 
         res.status(200).json({success: true, message: 'User updated successfully', data: updatedUser});
     } catch (error) {
-        res.status(500).json({success: false, message: 'Error updating user', data: error.message});
+        res.status(500).json({success: false, message: 'Error creating user', data: error.message});
     }
 })
 
