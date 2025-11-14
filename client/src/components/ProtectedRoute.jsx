@@ -1,6 +1,6 @@
-import { useSelector } from 'react-redux';
-import { Navigate, Outlet } from 'react-router-dom';
-import LoadingSpinner from './LoadingSpinner';
+import { useSelector } from "react-redux";
+import { Navigate, Outlet } from "react-router-dom";
+import LoadingSpinner from "./LoadingSpinner";
 
 /**
  * ProtectedLayout - Layout for routes that require authentication

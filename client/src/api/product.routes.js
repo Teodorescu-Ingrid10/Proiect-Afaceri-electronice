@@ -3,7 +3,7 @@ import axiosAuth from "../axios/axiosAuth";
 
 export const fetchProducts = async () => {
   try {
-    const response = await axiosNoAuth.get('products');
+    const response = await axiosNoAuth.get("products");
     return response.data;
   } catch (error) {
     console.error("Error fetching products:", error);
@@ -23,7 +23,7 @@ export const getProductById = async (id) => {
 
 export const createProduct = async (productData) => {
   try {
-    const response = await axiosAuth.post('products', productData);
+    const response = await axiosAuth.post("products", productData);
     return response.data;
   } catch (error) {
     console.error("Error creating product:", error);

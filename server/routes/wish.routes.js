@@ -1,14 +1,13 @@
-
-const {Product} = require('../database/models');
-const {User} = require('../database/models');
-const {Wishlist} = require('../database/models');
-const express = require('express');
-const bcrypt = require('bcrypt');
-const { verifyToken } = require('../utils/token');
+const { Product } = require("../database/models");
+const { User } = require("../database/models");
+const { Wishlist } = require("../database/models");
+const express = require("express");
+const bcrypt = require("bcrypt");
+const { verifyToken } = require("../utils/token");
 
 const router = express.Router();
 
-router.post('/', verifyToken, async (req, res) => {
+router.post("/", verifyToken, async (req, res) => {
   try {
     const { productId, notes } = req.body;
     const userId = req.userId;
@@ -16,7 +15,7 @@ router.post('/', verifyToken, async (req, res) => {
     if (!productId) {
       return res.status(400).json({
         success: false,
-        message: 'Product ID is required',
+        message: "Product ID is required",
         data: {},
       });
     }
@@ -25,7 +24,7 @@ router.post('/', verifyToken, async (req, res) => {
     if (!product) {
       return res.status(404).json({
         success: false,
-        message: 'Product not found',
+        message: "Product not found",
         data: {},
       });
     }
@@ -34,7 +33,7 @@ router.post('/', verifyToken, async (req, res) => {
     if (existing) {
       return res.status(400).json({
         success: false,
-        message: 'Product already in wishlist',
+        message: "Product already in wishlist",
         data: {},
       });
     }
@@ -47,19 +46,19 @@ router.post('/', verifyToken, async (req, res) => {
 
     res.status(201).json({
       success: true,
-      message: 'Product added to wishlist',
+      message: "Product added to wishlist",
       data: wishlistItem,
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: 'Error adding product to wishlist',
+      message: "Error adding product to wishlist",
       data: error.message,
     });
   }
 });
 
-router.put('/:id', verifyToken, async (req, res) => {
+router.put("/:id", verifyToken, async (req, res) => {
   try {
     const id = req.params.id;
     const { notes } = req.body;
@@ -70,7 +69,7 @@ router.put('/:id', verifyToken, async (req, res) => {
     if (!wishlistItem) {
       return res.status(404).json({
         success: false,
-        message: 'Wishlist item not found',
+        message: "Wishlist item not found",
         data: {},
       });
     }
@@ -78,7 +77,7 @@ router.put('/:id', verifyToken, async (req, res) => {
     if (wishlistItem.userId !== userId) {
       return res.status(403).json({
         success: false,
-        message: 'Not authorized to update this wishlist item',
+        message: "Not authorized to update this wishlist item",
         data: {},
       });
     }
@@ -87,19 +86,19 @@ router.put('/:id', verifyToken, async (req, res) => {
 
     res.status(200).json({
       success: true,
-      message: 'Wishlist item updated successfully',
+      message: "Wishlist item updated successfully",
       data: updatedItem,
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: 'Error updating wishlist item',
+      message: "Error updating wishlist item",
       data: error.message,
     });
   }
 });
 
-router.get('/', verifyToken, async (req, res) => {
+router.get("/", verifyToken, async (req, res) => {
   try {
     const userId = req.userId;
 
@@ -108,63 +107,71 @@ router.get('/', verifyToken, async (req, res) => {
       include: [
         {
           model: Product,
-          attributes: ['id', 'name', 'price', 'category', 'image'],
+          attributes: ["id", "name", "price", "category", "image"],
         },
       ],
     });
 
     res.status(200).json({
       success: true,
-      message: 'Wishlist retrieved successfully',
+      message: "Wishlist retrieved successfully",
       data: wishlist,
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: 'Error retrieving wishlist',
+      message: "Error retrieving wishlist",
       data: error.message,
     });
   }
 });
 
-router.get('/:id', verifyToken, async (req, res) => {
+router.get("/:id", verifyToken, async (req, res) => {
   try {
     const userId = req.userId;
     const wishId = req.params.id;
 
     if (isNaN(wishId)) {
-      return res.status(400).json({ success: false, message: 'Wishlist id is not valid', data: {} });
-    };
+      return res
+        .status(400)
+        .json({
+          success: false,
+          message: "Wishlist id is not valid",
+          data: {},
+        });
+    }
 
     const wishlist = await Wishlist.findByPk(wishId, {
       where: { userId },
-        include: [
-            {
-                model: Product,
-                attributes: ['id', 'name', 'price', 'category', 'image'],
-            },
-        ],
+      include: [
+        {
+          model: Product,
+          attributes: ["id", "name", "price", "category", "image"],
+        },
+      ],
     });
 
     if (!wishlist) {
-      return res.status(404).json({ success: false, message: 'Wishlist item not found', data: {} });
+      return res
+        .status(404)
+        .json({ success: false, message: "Wishlist item not found", data: {} });
     }
 
     res.status(200).json({
       success: true,
-      message: 'Wishlist item retrieved successfully',
+      message: "Wishlist item retrieved successfully",
       data: wishlist,
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: 'Error retrieving wishlist',
+      message: "Error retrieving wishlist",
       data: error.message,
     });
   }
 });
 
-router.delete('/:id', verifyToken, async (req, res) => {
+router.delete("/:id", verifyToken, async (req, res) => {
   try {
     const id = req.params.id;
     const userId = req.userId;
@@ -174,7 +181,7 @@ router.delete('/:id', verifyToken, async (req, res) => {
     if (!wishlistItem) {
       return res.status(404).json({
         success: false,
-        message: 'Wishlist item not found',
+        message: "Wishlist item not found",
         data: {},
       });
     }
@@ -182,7 +189,7 @@ router.delete('/:id', verifyToken, async (req, res) => {
     if (wishlistItem.userId !== userId) {
       return res.status(403).json({
         success: false,
-        message: 'Not authorized to delete this wishlist item',
+        message: "Not authorized to delete this wishlist item",
         data: {},
       });
     }
@@ -191,13 +198,13 @@ router.delete('/:id', verifyToken, async (req, res) => {
 
     res.status(200).json({
       success: true,
-      message: 'Wishlist item deleted successfully',
+      message: "Wishlist item deleted successfully",
       data: {},
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: 'Error deleting wishlist item',
+      message: "Error deleting wishlist item",
       data: error.message,
     });
   }
