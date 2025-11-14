@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { toast } from 'sonner';
-import CreateEditProductForm from '../components/CreateEditProductForm';
-import { getProductById, updateProduct } from '../api/product.routes';
-import LoadingSpinner from '../components/LoadingSpinner';
+import { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+import CreateEditProductForm from "../components/CreateEditProductForm";
+import { getProductById, updateProduct } from "../api/product.routes";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 export default function EditProductPage() {
   const { id } = useParams();
@@ -21,14 +21,14 @@ export default function EditProductPage() {
         if (response?.success || response?.data) {
           setProduct(response.data || response);
         } else {
-          setError(response?.message || 'Failed to load product');
-          toast.error('Failed to load product');
-          setTimeout(() => navigate('/products'), 2000);
+          setError(response?.message || "Failed to load product");
+          toast.error("Failed to load product");
+          setTimeout(() => navigate("/products"), 2000);
         }
       } catch (err) {
-        setError(err.message || 'An error occurred while fetching the product');
-        toast.error('An error occurred while fetching the product');
-        setTimeout(() => navigate('/products'), 2000);
+        setError(err.message || "An error occurred while fetching the product");
+        toast.error("An error occurred while fetching the product");
+        setTimeout(() => navigate("/products"), 2000);
       } finally {
         setLoading(false);
       }
@@ -44,13 +44,15 @@ export default function EditProductPage() {
       const response = await updateProduct(id, formData);
 
       if (response?.success) {
-        toast.success('Product updated successfully!');
-        navigate('/products');
+        toast.success("Product updated successfully!");
+        navigate("/products");
       } else {
-        toast.error(response?.message || 'Failed to update product');
+        toast.error(response?.message || "Failed to update product");
       }
     } catch (error) {
-      toast.error(error.message || 'An error occurred while updating the product');
+      toast.error(
+        error.message || "An error occurred while updating the product"
+      );
       throw error;
     }
   };
@@ -65,5 +67,11 @@ export default function EditProductPage() {
     );
   }
 
-  return <CreateEditProductForm product={product} onSubmit={handleSubmit} isLoading={loading} />;
+  return (
+    <CreateEditProductForm
+      product={product}
+      onSubmit={handleSubmit}
+      isLoading={loading}
+    />
+  );
 }

@@ -3,7 +3,7 @@ import axiosAuth from "../axios/axiosAuth";
 
 export const loginUser = async (credentials) => {
   try {
-    const response = await axiosNoAuth.post('/auth/login', credentials);
+    const response = await axiosNoAuth.post("/auth/login", credentials);
     return response.data;
   } catch (error) {
     console.error("Error logging in user:", error);
@@ -13,7 +13,7 @@ export const loginUser = async (credentials) => {
 
 export const checkToken = async (token) => {
   try {
-    const response = await axiosAuth.post('/auth/check', { token });
+    const response = await axiosAuth.post("/auth/check", { token });
     return response.data;
   } catch (error) {
     console.error("Token validation failed:", error);

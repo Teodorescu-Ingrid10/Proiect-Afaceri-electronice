@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { toast } from 'sonner';
-import LoadingSpinner from './LoadingSpinner';
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+import LoadingSpinner from "./LoadingSpinner";
 
 /**
  * CreateEditProductForm - Reusable form for creating and editing products
@@ -9,15 +9,19 @@ import LoadingSpinner from './LoadingSpinner';
  * @param {Function} onSubmit - Callback function that handles the form submission
  * @param {boolean} isLoading - Loading state
  */
-export default function CreateEditProductForm({ product = null, onSubmit, isLoading = false }) {
+export default function CreateEditProductForm({
+  product = null,
+  onSubmit,
+  isLoading = false,
+}) {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    name: '',
-    description: '',
-    price: '',
-    category: '',
-    image: '',
-    stock: '',
+    name: "",
+    description: "",
+    price: "",
+    category: "",
+    image: "",
+    stock: "",
   });
 
   const [submitLoading, setSubmitLoading] = useState(false);
@@ -25,12 +29,12 @@ export default function CreateEditProductForm({ product = null, onSubmit, isLoad
   useEffect(() => {
     if (product) {
       setFormData({
-        name: product.name || '',
-        description: product.description || '',
-        price: product.price || '',
-        category: product.category || '',
-        image: product.image || '',
-        stock: product.stock || '',
+        name: product.name || "",
+        description: product.description || "",
+        price: product.price || "",
+        category: product.category || "",
+        image: product.image || "",
+        stock: product.stock || "",
       });
     }
   }, [product]);
@@ -48,19 +52,19 @@ export default function CreateEditProductForm({ product = null, onSubmit, isLoad
 
     // Validare de bază
     if (!formData.name.trim()) {
-      toast.error('Product name is required');
+      toast.error("Product name is required");
       return;
     }
     if (!formData.price || parseFloat(formData.price) <= 0) {
-      toast.error('Price must be greater than 0');
+      toast.error("Price must be greater than 0");
       return;
     }
     if (!formData.category.trim()) {
-      toast.error('Category is required');
+      toast.error("Category is required");
       return;
     }
-    if (formData.stock === '' || parseInt(formData.stock) < 0) {
-      toast.error('Stock must be 0 or greater');
+    if (formData.stock === "" || parseInt(formData.stock) < 0) {
+      toast.error("Stock must be 0 or greater");
       return;
     }
 
@@ -68,14 +72,14 @@ export default function CreateEditProductForm({ product = null, onSubmit, isLoad
       setSubmitLoading(true);
       await onSubmit(formData);
     } catch (error) {
-      console.error('Error submitting form:', error);
+      console.error("Error submitting form:", error);
     } finally {
       setSubmitLoading(false);
     }
   };
 
   const handleCancel = () => {
-    navigate('/products');
+    navigate("/products");
   };
 
   if (isLoading) {
@@ -86,13 +90,16 @@ export default function CreateEditProductForm({ product = null, onSubmit, isLoad
     <div className="bg-white h-screen overflow-y-auto">
       <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
         <h1 className="text-3xl font-bold tracking-tight text-gray-900 mb-8">
-          {product ? 'Edit Product' : 'Create New Product'}
+          {product ? "Edit Product" : "Create New Product"}
         </h1>
 
         <form onSubmit={handleSubmit} className="space-y-6 max-w-xl">
           {/* Product Name */}
           <div>
-            <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="name"
+              className="block text-sm font-medium text-gray-700"
+            >
               Product Name *
             </label>
             <div className="mt-1">
@@ -111,7 +118,10 @@ export default function CreateEditProductForm({ product = null, onSubmit, isLoad
 
           {/* Description */}
           <div>
-            <label htmlFor="description" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="description"
+              className="block text-sm font-medium text-gray-700"
+            >
               Description
             </label>
             <div className="mt-1">
@@ -129,7 +139,10 @@ export default function CreateEditProductForm({ product = null, onSubmit, isLoad
 
           {/* Price */}
           <div>
-            <label htmlFor="price" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="price"
+              className="block text-sm font-medium text-gray-700"
+            >
               Price (USD) *
             </label>
             <div className="mt-1">
@@ -150,7 +163,10 @@ export default function CreateEditProductForm({ product = null, onSubmit, isLoad
 
           {/* Category */}
           <div>
-            <label htmlFor="category" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="category"
+              className="block text-sm font-medium text-gray-700"
+            >
               Category *
             </label>
             <div className="mt-1">
@@ -169,7 +185,10 @@ export default function CreateEditProductForm({ product = null, onSubmit, isLoad
 
           {/* Stock */}
           <div>
-            <label htmlFor="stock" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="stock"
+              className="block text-sm font-medium text-gray-700"
+            >
               Stock *
             </label>
             <div className="mt-1">
@@ -189,7 +208,10 @@ export default function CreateEditProductForm({ product = null, onSubmit, isLoad
 
           {/* Image URL */}
           <div>
-            <label htmlFor="image" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="image"
+              className="block text-sm font-medium text-gray-700"
+            >
               Image URL
             </label>
             <div className="mt-1">
@@ -211,7 +233,8 @@ export default function CreateEditProductForm({ product = null, onSubmit, isLoad
                   alt="Preview"
                   className="h-40 w-40 object-cover rounded-md"
                   onError={(e) => {
-                    e.target.src = 'https://via.placeholder.com/160?text=Invalid+Image';
+                    e.target.src =
+                      "https://via.placeholder.com/160?text=Invalid+Image";
                   }}
                 />
               </div>
@@ -225,7 +248,11 @@ export default function CreateEditProductForm({ product = null, onSubmit, isLoad
               disabled={submitLoading}
               className="flex-1 flex justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {submitLoading ? 'Saving...' : product ? 'Update Product' : 'Create Product'}
+              {submitLoading
+                ? "Saving..."
+                : product
+                ? "Update Product"
+                : "Create Product"}
             </button>
             <button
               type="button"

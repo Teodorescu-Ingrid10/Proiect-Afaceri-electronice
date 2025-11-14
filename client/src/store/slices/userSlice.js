@@ -1,5 +1,5 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { decodeToken } from '../../utils/decodeToken';
+import { createSlice } from "@reduxjs/toolkit";
+import { decodeToken } from "../../utils/decodeToken";
 
 const initialState = {
   loggedIn: false,
@@ -9,16 +9,16 @@ const initialState = {
 };
 
 const userSlice = createSlice({
-  name: 'user',
+  name: "user",
   initialState,
   reducers: {
     setToken: (state, action) => {
       state.token = action.payload;
       state.loggedIn = !!action.payload;
-      
+
       if (action.payload) {
         state.user = decodeToken(action.payload);
-        localStorage.setItem('token', action.payload);
+        localStorage.setItem("token", action.payload);
       } else {
         state.user = null;
       }
@@ -27,7 +27,7 @@ const userSlice = createSlice({
       state.loggedIn = false;
       state.token = null;
       state.user = null;
-      localStorage.removeItem('token');
+      localStorage.removeItem("token");
     },
     setCheckTokenLoading: (state, action) => {
       state.checkTokenLoading = action.payload;

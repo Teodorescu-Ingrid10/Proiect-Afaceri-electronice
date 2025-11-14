@@ -1,10 +1,14 @@
-import { useEffect, useState } from 'react';
-import { createWishlistItem, fetchWishlist, deleteWishlistItem } from '../api/wish.routes';
-import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { toast } from 'sonner';
-import { fetchProducts, deleteProduct } from '../api/product.routes';
-import LoadingSpinner from '../components/LoadingSpinner';
+import { useEffect, useState } from "react";
+import {
+  createWishlistItem,
+  fetchWishlist,
+  deleteWishlistItem,
+} from "../api/wish.routes";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+import { fetchProducts, deleteProduct } from "../api/product.routes";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 export default function ProductsPage() {
   const [products, setProducts] = useState([]);
@@ -13,37 +17,37 @@ export default function ProductsPage() {
   const [deletingId, setDeletingId] = useState(null);
   const [wishlist, setWishlist] = useState([]);
   const user = useSelector((state) => state.user.user);
-  const isAdmin = user?.role === 'admin';
+  const isAdmin = user?.role === "admin";
   const navigate = useNavigate();
 
   useEffect(() => {
     const getProducts = async () => {
       try {
         setLoading(true);
-        const {data} = await fetchProducts();
+        const { data } = await fetchProducts();
         if (data && Array.isArray(data)) {
           setProducts(data);
         } else {
-          setError('Failed to load products');
+          setError("Failed to load products");
         }
       } catch (err) {
-        setError(err.message || 'An error occurred while fetching products');
-        console.error('Error fetching products:', err);
+        setError(err.message || "An error occurred while fetching products");
+        console.error("Error fetching products:", err);
       } finally {
         setLoading(false);
       }
     };
     getProducts();
-    
+
     const loadWishlist = async () => {
       try {
         const data = await fetchWishlist();
         if (data?.data) {
           // Extract product IDs from wishlist items
-          setWishlist(data.data.map(item => item.productId));
+          setWishlist(data.data.map((item) => item.productId));
         }
       } catch (err) {
-        console.error('Error loading wishlist:', err);
+        console.error("Error loading wishlist:", err);
       }
     };
     loadWishlist();
@@ -54,7 +58,7 @@ export default function ProductsPage() {
   };
 
   const handleDeleteClick = async (productId) => {
-    if (!confirm('Are you sure you want to delete this product?')) {
+    if (!confirm("Are you sure you want to delete this product?")) {
       return;
     }
 
@@ -64,27 +68,29 @@ export default function ProductsPage() {
 
       if (response?.success) {
         setProducts(products.filter((p) => p.id !== productId));
-        toast.success('Product deleted successfully');
+        toast.success("Product deleted successfully");
       } else {
-        toast.error(response?.message || 'Failed to delete product');
+        toast.error(response?.message || "Failed to delete product");
       }
     } catch (err) {
-      toast.error(err.message || 'An error occurred while deleting the product');
+      toast.error(
+        err.message || "An error occurred while deleting the product"
+      );
     } finally {
       setDeletingId(null);
     }
   };
 
   const handleCreateClick = () => {
-    navigate('/products/create');
+    navigate("/products/create");
   };
 
   const handleWishlistToggle = async (productId) => {
     const isInWishlist = wishlist.includes(productId);
     // if (isInWishlist) {
-      // Show confirmation before removing
-      // const confirmed = confirm('Are you sure you want to remove this item from your wishlist?');
-      // if (confirmed) return;
+    // Show confirmation before removing
+    // const confirmed = confirm('Are you sure you want to remove this item from your wishlist?');
+    // if (confirmed) return;
 
     //   try {
     //     const response = await deleteWishlistItem(productId);
@@ -102,12 +108,12 @@ export default function ProductsPage() {
       const response = await createWishlistItem(productId);
       if (response?.success) {
         setWishlist([...wishlist, productId]);
-        toast.success('Added to wishlist');
+        toast.success("Added to wishlist");
       } else {
-        toast.error(response?.message || 'Failed to add to wishlist');
+        toast.error(response?.message || "Failed to add to wishlist");
       }
     } catch (err) {
-      toast.error(err.message || 'Error adding to wishlist');
+      toast.error(err.message || "Error adding to wishlist");
     }
     // }
   };
@@ -136,8 +142,18 @@ export default function ProductsPage() {
               onClick={handleCreateClick}
               className="mt-4 inline-flex items-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-500"
             >
-              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+              <svg
+                className="w-5 h-5 mr-2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 4v16m8-8H4"
+                />
               </svg>
               Create First Product
             </button>
@@ -151,14 +167,26 @@ export default function ProductsPage() {
     <div className="bg-white h-screen overflow-y-auto">
       <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
         <div className="flex justify-between items-center mb-8">
-          <h2 className="text-2xl font-bold tracking-tight text-gray-900">Products</h2>
+          <h2 className="text-2xl font-bold tracking-tight text-gray-900">
+            Products
+          </h2>
           {isAdmin && (
             <button
               onClick={handleCreateClick}
               className="inline-flex items-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-500"
             >
-              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+              <svg
+                className="w-5 h-5 mr-2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 4v16m8-8H4"
+                />
               </svg>
               Create Product
             </button>
@@ -171,33 +199,39 @@ export default function ProductsPage() {
               <div className="relative">
                 <img
                   alt={product.name}
-                  src={product.image || 'https://via.placeholder.com/300'}
+                  src={product.image || "https://via.placeholder.com/300"}
                   className="aspect-square w-full rounded-md bg-gray-200 object-cover group-hover:opacity-75 lg:aspect-auto lg:h-80 pointer-events-none"
                 />
-                  <button
-                    type="button"
-                    className="absolute top-2 left-2 p-2 rounded-full shadow-lg transition-colors duration-200 z-20"
-                    onClick={() => handleWishlistToggle(product.id)}
-                    title="Wishlist"
-                    style={{ backgroundColor: wishlist.includes(product.id) ? '#dc2626' : '#f87171' }}
+                <button
+                  type="button"
+                  className="absolute top-2 left-2 p-2 rounded-full shadow-lg transition-colors duration-200 z-20"
+                  onClick={() => handleWishlistToggle(product.id)}
+                  title="Wishlist"
+                  style={{
+                    backgroundColor: wishlist.includes(product.id)
+                      ? "#dc2626"
+                      : "#f87171",
+                  }}
+                >
+                  <svg
+                    className="w-5 h-5"
+                    fill={
+                      wishlist.includes(product.id) ? "currentColor" : "none"
+                    }
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
                   >
-                    <svg
-                      className="w-5 h-5"
-                      fill={wishlist.includes(product.id) ? 'currentColor' : 'none'}
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5
                           2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09
                           C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5
                           c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
-                      />
-                    </svg>
-                  </button>
+                    />
+                  </svg>
+                </button>
                 {isAdmin && (
                   <div className="absolute top-2 right-2 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
                     <button
@@ -206,8 +240,18 @@ export default function ProductsPage() {
                       onClick={() => handleEditClick(product.id)}
                       title="Edit"
                     >
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                      <svg
+                        className="w-5 h-5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                        />
                       </svg>
                     </button>
                     <button
@@ -217,8 +261,18 @@ export default function ProductsPage() {
                       disabled={deletingId === product.id}
                       title="Delete"
                     >
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      <svg
+                        className="w-5 h-5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                        />
                       </svg>
                     </button>
                   </div>
@@ -232,14 +286,18 @@ export default function ProductsPage() {
                       {product.name}
                     </a>
                   </h3>
-                  <p className="mt-1 text-sm text-gray-500">{product.category}</p>
+                  <p className="mt-1 text-sm text-gray-500">
+                    {product.category}
+                  </p>
                 </div>
-                <p className="text-sm font-medium text-gray-900">${product.price}</p>
+                <p className="text-sm font-medium text-gray-900">
+                  ${product.price}
+                </p>
               </div>
             </div>
           ))}
         </div>
       </div>
     </div>
-  )
+  );
 }
